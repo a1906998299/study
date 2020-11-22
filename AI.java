@@ -20,19 +20,40 @@ public class AI extends MIDlet
 }
 class MainCanvas extends Canvas
 {
-	int x,y,i,j;
+	int x,y,i;
+	Image leftImg[]=new Image[3];
+	Image rightImg[]=new Image[3];
+	Image upImg[]=new Image[3];
+	Image downImg[]=new Image[3];
 	Image currentImg;
-	Image heroImg[][]=new Image[4][3];//左0，右1，上3，下2
-
+	//Image downImg,leftImg,upImg,rightImg,currentImg;
+	//Image leftImg1,leftImg2,rightImg1,rightImg2,upImg1,upImg2,downImg1,downImg2;
 	int leftFlag,rightFlag,upFlag,downFlag;
 	public MainCanvas(){
 		try
 		{
-			for(i=0;i<4;i++)
-				for(j=0;j<3;j++){
-                  heroImg[i][j]=Image.createImage("/sayo"+i+j+".png");
+			for(i=0;i<3;i++)
+			{
+				leftImg[i]=Image.createImage("/sayo"+i+"2.png");
+				rightImg[i]=Image.createImage("/sayo"+i+"6.png");
+				upImg[i]=Image.createImage("/sayo"+i+"4.png");
+				downImg[i]=Image.createImage("/sayo"+i+"0.png");
 			}
-			currentImg=heroImg[2][0];
+			/*
+			downImg=Image.createImage("/sayo10.png");
+			leftImg=Image.createImage("/sayo12.png");
+			leftImg1=Image.createImage("/sayo02.png");
+			leftImg2=Image.createImage("/sayo22.png");
+			rightImg1=Image.createImage("/sayo06.png");
+			rightImg2=Image.createImage("/sayo26.png");
+			upImg1=Image.createImage("/sayo04.png");
+			upImg2=Image.createImage("/sayo24.png");
+			downImg1=Image.createImage("/sayo00.png");
+			downImg2=Image.createImage("/sayo20.png");
+			upImg=Image.createImage("/sayo14.png");
+			rightImg=Image.createImage("/sayo16.png");
+			*/
+			currentImg=downImg[1];
 			x=120;
 			y=100;
 			leftFlag=1;
@@ -47,7 +68,7 @@ class MainCanvas extends Canvas
 		}
 	}
 	public void paint(Graphics g){
-		g.setColor(230,97,0);
+		g.setColor(100,100,100);
 		g.fillRect(0,0,getWidth(),getHeight());
 		g.drawImage(currentImg,x,y,0);//120x坐标，100y坐标
 	}
@@ -59,11 +80,11 @@ class MainCanvas extends Canvas
 		 if(action==LEFT)
 			{
 			 if(leftFlag==1)
-				{ currentImg=heroImg[0][2];
+				{ currentImg=leftImg[2];
 			       leftFlag++;
 				}
 			 else if(leftFlag==2)
-				{ currentImg=heroImg[0][1];
+				{ currentImg=leftImg[1];
 			          leftFlag=1;
 				}
 				x=x-1;
@@ -74,11 +95,11 @@ class MainCanvas extends Canvas
 		{
 			{
 			  if(rightFlag==1)
-				{ currentImg=heroImg[1][2];
+				{ currentImg=rightImg[2];
 			       rightFlag++;
 				}
 			 else if(rightFlag==2)
-				{ currentImg=heroImg[1][1];
+				{ currentImg=rightImg[1];
 			          rightFlag=1;
 				}
 				x=x+1;
@@ -88,11 +109,11 @@ class MainCanvas extends Canvas
 		 else if(action==UP)
 		{
 			 if(upFlag==1)
-				{ currentImg=heroImg[3][2];
+				{ currentImg=upImg[2];
 			       upFlag++;
 				}
 			 else if(upFlag==2)
-				{ currentImg=heroImg[3][1];
+				{ currentImg=upImg[1];
 			          upFlag=1;
 				}
 				y=y-1;
@@ -101,11 +122,11 @@ class MainCanvas extends Canvas
 		 else if(action==DOWN)
 		{
 			 if(downFlag==1)
-				{ currentImg=heroImg[2][2];
+				{ currentImg=downImg[2];
 			       downFlag++;
 				}
 			 else if(downFlag==2)
-				{ currentImg=heroImg[2][1];
+				{ currentImg=downImg[1];
 			          downFlag=1;
 				}
 				y=y+1;
