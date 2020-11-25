@@ -1,6 +1,7 @@
 import javax.microedition.lcdui.*;
 import javax.microedition.midlet.*;
 import java.io.*;
+import java.util.*;
 
 public class AI extends MIDlet
 {
@@ -18,13 +19,18 @@ public class AI extends MIDlet
 	public void pauseApp(){
 	}
 }
-class MainCanvas extends Canvas
+class MainCanvas extends Canvas implements Runnable
 {
-	int x,y,i,j;
+	Thread thread;
+	int heroX,heroY,bossX,bossY;
+	int	i,j;
+	int flag;
+	Image bossImg;
 	Image currentImg;
 	Image heroImg[][]=new Image[4][3];//左0，右1，上3，下2
 
-	int leftFlag,rightFlag,upFlag,downFlag;
+	Random rd=new Random();
+
 	public MainCanvas(){
 		try
 		{
@@ -32,24 +38,63 @@ class MainCanvas extends Canvas
 				for(j=0;j<3;j++){
                   heroImg[i][j]=Image.createImage("/sayo"+i+j+".png");
 			}
-			currentImg=heroImg[2][0];
-			x=120;
-			y=100;
-			leftFlag=1;
-			rightFlag=1;
-			upFlag=1;
-			downFlag=1;
-			
+			bossImg=Image.createImage("/zuzu000.png");
+			currentImg=heroImg[3][0];
+			heroX=120;
+			heroY=100;
+			flag=1;
+
+			thread=new Thread(this);
+			thread.start();
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
+	public void run(){
+		while(true){
+			int rdNumber=rd.nextInt(10);
+			try
+			{
+			    Thread.sleep(200);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+			if(rdNumber%3==0){
+				if(bossX<heroX){
+					bossX++;
+				}
+				else bossX--;
+				if(bossY<heroY){
+					bossY++;
+				}
+				else bossY--;
+			}
+				repaint();
+		}
+	}
+
+
 	public void paint(Graphics g){
 		g.setColor(230,97,0);
 		g.fillRect(0,0,getWidth(),getHeight());
-		g.drawImage(currentImg,x,y,0);//120x坐标，100y坐标
+		g.drawImage(currentImg,heroX,heroY,0);//120x坐标，100y坐标
+		g.drawImage(bossImg,bossX,bossY,0);
+	}
+	public void changepicdirect(int direction)
+	{
+        if(flag==1)
+				{ currentImg=heroImg[direction][2];
+			       flag++;
+				}
+			 else if(flag==2)
+				{ currentImg=heroImg[direction][1];
+			          flag=1;
+				}
+				repaint();
 	}
 	public void keyPressed(int keyCode)
 	{
@@ -57,63 +102,32 @@ class MainCanvas extends Canvas
 
 		
 		 if(action==LEFT)
-			{
-			 if(leftFlag==1)
-				{ currentImg=heroImg[0][2];
-			       leftFlag++;
-				}
-			 else if(leftFlag==2)
-				{ currentImg=heroImg[0][1];
-			          leftFlag=1;
-				}
-				x=x-1;
-			}
+		{
+            changepicdirect(0);
+				heroX=heroX-1;
+		}
 		
 
 		 else if(action==RIGHT)		
 		{
 			{
-			  if(rightFlag==1)
-				{ currentImg=heroImg[1][2];
-			       rightFlag++;
-				}
-			 else if(rightFlag==2)
-				{ currentImg=heroImg[1][1];
-			          rightFlag=1;
-				}
-				x=x+1;
+			  changepicdirect(1);
+				heroX=heroX+1;
 			}
 		}
 
 		 else if(action==UP)
 		{
-			 if(upFlag==1)
-				{ currentImg=heroImg[3][2];
-			       upFlag++;
-				}
-			 else if(upFlag==2)
-				{ currentImg=heroImg[3][1];
-			          upFlag=1;
-				}
-				y=y-1;
+			changepicdirect(2);
+				heroY=heroY-1;
 		}
 		
 		 else if(action==DOWN)
 		{
-			 if(downFlag==1)
-				{ currentImg=heroImg[2][2];
-			       downFlag++;
-				}
-			 else if(downFlag==2)
-				{ currentImg=heroImg[2][1];
-			          downFlag=1;
-				}
-				y=y+1;
+			 changepicdirect(3);
+				heroY=heroY+1;
 		}
-	      repaint();
-	 }
-	
-	
 	}
+}
 
 
